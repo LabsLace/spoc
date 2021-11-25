@@ -83,6 +83,12 @@ Now each time you commit a file, pre-commit will run and check your files, make 
 
 Recommendation: Use pylint to lint your code, that will help to mantain the project.
 
+### Code good practices
+
+The idea of having best practices when coding is something that you need to define with your team and stick to those practices, but we can generalize some thigs for the backend.
+
+Plase stick to follow [pep8](https://www.python.org/dev/peps/pep-0008/) when coding in python, this will help us to follow good standards when writing code.
+
 ## Dev Deployment:
 
 TBD
