@@ -1,60 +1,6 @@
 """
-Get env variables to make the correcto connection to the DB.
-Get query or queries from the client
-Check if the query is a string or the queries is a list of dictionaries
-    or if the query is a dictionary:
-    E.g: query = "Select..."
-    query = [
-        {
-            "query": "Select..."  # Not optional
-            "identifiers: {"column_name": "name", " # Optional
-            "parameters": {"}
-        }
-    ]
-
-    query = {
-        "query": "Select..."  # Not optional
-        "identifiers: {"column_name": "name", " # Optional
-        "parameters": {"}
-    }
-
-If the query is not a valid type:
-    raise or return and error
-
-if the query is a valid type:
-
-    if the query is a str it can be executes (means it does not have parameters or identifiers)
-
-    if the query is a list of dicts of a dictionary:
-        convert dict to list of dictionaries:
-
-        for each dict in the list of dicts:
-            if it has identifirs:
-                format query
-
-            if it has parameters
-                format query
-
-        return formatted queries
-
-after format queries
-    get connection or raise
-
-    if connection:
-        for query in queries:
-            # Needs to return a dictionary and append to a list,
-            # it does not matter if it is just one query
-            # Handle status codes and errors
-            # If one query fails it should return an error and prevent any commit to the DB.
-            result = execute_query(query)
-
-    return result [
-        "status_code": 200,
-        "error": True/False,
-        "error_message": None/"message",
-        "query_result": [{}, {}, {}, {}, {}, {}]
-    ]
-
+This functions should work for all the endpoints, the idea
+is to have a unique place where we make connections to the DB.
 """
 
 
@@ -69,16 +15,6 @@ import psycopg2.errors
 from cerberus import Validator
 from psycopg2.extras import RealDictCursor
 from psycopg2 import sql
-
-
-# Remove for after and testing debugging
-# from pathlib import Path
-# from dotenv import load_dotenv
-
-# load_dotenv(
-#     dotenv_path="/Users/rodrigomacedo/Documents/LACE/code_projects/spoc/app/backend/.env"
-# )
-
 
 DB_NAME = os.environ["DB_NAME"]
 HOST = os.environ["DB_HOST"]
@@ -98,10 +34,13 @@ QUERY_SCHEMA = {
     },
 }
 
-FORBIDDEN_COMMANDS = ["DELETE", "DROP"]
-
 
 def execute_query(query: Union[str, list[dict], dict]) -> dict:
+    """
+    Main handler to execute queries, handles the logic and returns
+    the correct response.
+    """
+
     queries = prepare_queries_object(query)
     queries_results = {
         "error": True,
@@ -145,6 +84,11 @@ def prepare_queries_object(query: Union[str, list[dict], dict]) -> list[dict]:
 
 
 def are_queries_valid(queries: list[dict]) -> bool:
+    """
+    We need to validate that the queries come in the correct format and also,
+    be careful about the semicolons since they can lead to SQL injection
+    problems
+    """
     is_valid = True
     query_validator = Validator(QUERY_SCHEMA)
 
@@ -156,6 +100,10 @@ def are_queries_valid(queries: list[dict]) -> bool:
 
 
 def get_query_executables(queries: list[dict]) -> list[dict]:
+    """
+    Formats the queries, adds identifiers and create the tuples of the complete
+    data that will be executed.
+    """
     executables = []
 
     for query in queries:
@@ -176,6 +124,12 @@ def get_query_executables(queries: list[dict]) -> list[dict]:
 
 
 def get_connection() -> psycopg2.extensions.connection:
+    """
+    If we have valid queries we can create the connection to the DB.
+    Returning a real dict cursor since it will return the rows as
+    dictionaries.
+    """
+
     connection = None
 
     try:
@@ -197,6 +151,11 @@ def get_connection() -> psycopg2.extensions.connection:
 def execute(
     queries_executables: list[tuple], connection: psycopg2.extensions.connection
 ) -> list[dict]:
+    """
+    Make the call to the DB and returns the last response with the
+    result.
+    """
+    # TODO:  We are missing a lot of exceptions but let's add them as we need.
     error, error_message, queries_result = False, None, []
     cursor = connection.cursor()
 
@@ -205,11 +164,23 @@ def execute(
             cursor.execute(executable_data[0], executable_data[1])
 
         except psycopg2.errors.lookup(psycopg2.errorcodes.UNDEFINED_TABLE) as exception:
-            error, error_message = True, exception
+            error, error_message = True, str(exception)
+            connection.rollback()
+
+        except psycopg2.errors.lookup(
+            psycopg2.errorcodes.UNDEFINED_COLUMN
+        ) as exception:
+            error, error_message = True, str(exception)
+            connection.rollback()
 
         else:
-            result = json.loads(json.dumps(cursor.fetchall()))
-            queries_result.append(result)
+            if cursor.description is not None:
+                result = json.loads(json.dumps(cursor.fetchall(), default=str))
+                queries_result.append(result)
+
+    if connection:
+        connection.commit()
+        connection.close()
 
     return {
         "error": error,

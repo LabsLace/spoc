@@ -89,6 +89,16 @@ The idea of having best practices when coding is something that you need to defi
 
 Plase stick to follow [pep8](https://www.python.org/dev/peps/pep-0008/) when coding in python, this will help us to follow good standards when writing code.
 
+## How to test
+
+Let's follow the [test driven development (TDD)](https://en.wikipedia.org/wiki/Test-driven_development). Please make sure your tests are mocked up correctly and all the dependencies are managed automatically.
+
+To run the tests you just need to run:
+
+```shell
+python app/backend/run_tests.py
+```
+
 ## Dev Deployment:
 
 TBD
@@ -102,3 +112,4 @@ TBD
 - Make easier the way to set up a local DB and to populate some data. Some ideas:
   - We can create a shared DB in a development enviroment, let's see if we can connect and we will have a DBA.
   - We can create a docker file to spin up a container and create a seeder for the application.
+- Dockerize the app???
