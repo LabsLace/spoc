@@ -16,6 +16,8 @@ from cerberus import Validator
 from psycopg2.extras import RealDictCursor
 from psycopg2 import sql
 
+from shared_functions.spoc_logger import logger
+
 DB_NAME = os.environ["DB_NAME"]
 HOST = os.environ["DB_HOST"]
 PORT = os.environ["DB_PORT"]
@@ -56,7 +58,7 @@ def execute_query(query: Union[str, list[dict], dict]) -> dict:
             queries_results = execute(executables, connection)
 
         else:
-            ...
+            logger.error("Missing connection to execute queries.")
 
     return queries_results
 
@@ -143,7 +145,7 @@ def get_connection() -> psycopg2.extensions.connection:
         )
 
     except psycopg2.OperationalError:
-        ...
+        logger.error("Couldn't connect to the DB.")
 
     return connection
 

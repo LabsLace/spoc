@@ -7,6 +7,7 @@ from unittest.mock import patch
 import psycopg2.errorcodes
 import psycopg2.errors
 
+# Need to fix the imports to make the tests work.
 import app.backend.shared_functions.db_connection as db_functions
 
 
