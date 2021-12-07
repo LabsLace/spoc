@@ -9,4 +9,4 @@ from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=pathlib.Path(__file__).parent.parent.parent.joinpath(".env"))
 
-os.system("pytest --pyargs app/backend/shared_functions -vvv")
+os.system("pytest --pyargs app/backend/shared_functions/tests -vvv")

@@ -7,11 +7,10 @@ from unittest.mock import patch
 import psycopg2.errorcodes
 import psycopg2.errors
 
-# TODO Need to fix the imports to make the tests work.
 from shared_functions.db_connection import execute_query
 
 
-@patch("app.backend.shared_functions.db_connection.psycopg2.connect")
+@patch("shared_functions.db_connection.psycopg2.connect")
 def test_select_query(mock_connection):
     query = "SELECT * FROM users.user_information ui"
     mock_connection.return_value.cursor.return_value.fetchall.return_value = [
@@ -68,11 +67,11 @@ def test_select_query(mock_connection):
             ]
         ],
     }
-    result = db_functions.execute_query(query)
+    result = execute_query(query)
     assert result == expected_result
 
 
-@patch("app.backend.shared_functions.db_connection.psycopg2.connect")
+@patch("shared_functions.db_connection.psycopg2.connect")
 def test_select_with_params(mock_connection):
     query = {
         "query": """
@@ -110,11 +109,11 @@ def test_select_with_params(mock_connection):
         ],
     }
 
-    result = db_functions.execute_query(query)
+    result = execute_query(query)
     assert result == expected_result
 
 
-@patch("app.backend.shared_functions.db_connection.psycopg2.connect")
+@patch("shared_functions.db_connection.psycopg2.connect")
 def test_select_with_identifiers(mock_connection):
     query = {
         "query": """
@@ -164,11 +163,11 @@ def test_select_with_identifiers(mock_connection):
         ],
     }
 
-    result = db_functions.execute_query(query)
+    result = execute_query(query)
     assert result == expected_result
 
 
-@patch("app.backend.shared_functions.db_connection.psycopg2.connect")
+@patch("shared_functions.db_connection.psycopg2.connect")
 def test_select_with_params_and_identifiers(mock_connection):
     query = {
         "query": """
@@ -213,11 +212,11 @@ def test_select_with_params_and_identifiers(mock_connection):
         ],
     }
 
-    result = db_functions.execute_query(query)
+    result = execute_query(query)
     assert result == expected_result
 
 
-@patch("app.backend.shared_functions.db_connection.psycopg2.connect")
+@patch("shared_functions.db_connection.psycopg2.connect")
 def test_insert_query(mock_connection):
     query = {
         "query": """
@@ -249,11 +248,11 @@ def test_insert_query(mock_connection):
     mock_connection.return_value.cursor.return_value.description = None
     expected_result = {"error": False, "error_message": None, "query_result": []}
 
-    result = db_functions.execute_query(query)
+    result = execute_query(query)
     assert result == expected_result
 
 
-@patch("app.backend.shared_functions.db_connection.psycopg2.connect")
+@patch("shared_functions.db_connection.psycopg2.connect")
 def test_insert_with_identifiers(mock_connection):
     query = {
         "query": """
@@ -286,11 +285,11 @@ def test_insert_with_identifiers(mock_connection):
     mock_connection.return_value.cursor.return_value.description = None
     expected_result = {"error": False, "error_message": None, "query_result": []}
 
-    result = db_functions.execute_query(query)
+    result = execute_query(query)
     assert result == expected_result
 
 
-@patch("app.backend.shared_functions.db_connection.psycopg2.connect")
+@patch("shared_functions.db_connection.psycopg2.connect")
 def test_insert_with_return(mock_connection):
     query = {
         "query": """
@@ -328,11 +327,11 @@ def test_insert_with_return(mock_connection):
         "query_result": [[{"id": 9}]],
     }
 
-    result = db_functions.execute_query(query)
+    result = execute_query(query)
     assert result == expected_result
 
 
-@patch("app.backend.shared_functions.db_connection.psycopg2.connect")
+@patch("shared_functions.db_connection.psycopg2.connect")
 def test_update_query(mock_connection):
     query = {
         "query": """
@@ -346,11 +345,11 @@ def test_update_query(mock_connection):
     mock_connection.return_value.cursor.return_value.description = None
     expected_result = {"error": False, "error_message": None, "query_result": []}
 
-    result = db_functions.execute_query(query)
+    result = execute_query(query)
     assert result == expected_result
 
 
-@patch("app.backend.shared_functions.db_connection.psycopg2.connect")
+@patch("shared_functions.db_connection.psycopg2.connect")
 def test_update_with_return(mock_connection):
     query = {
         "query": """
@@ -369,11 +368,11 @@ def test_update_with_return(mock_connection):
         "query_result": [[{"id": 9}]],
     }
 
-    result = db_functions.execute_query(query)
+    result = execute_query(query)
     assert result == expected_result
 
 
-@patch("app.backend.shared_functions.db_connection.psycopg2.connect")
+@patch("shared_functions.db_connection.psycopg2.connect")
 def test_non_existing_column(mock_connection):
     query = "SELECT i_don_exist FROM users.user_information"
     mock_connection.return_value.cursor.return_value.execute.side_effect = psycopg2.errors.UndefinedColumn(
@@ -385,7 +384,7 @@ def test_non_existing_column(mock_connection):
         "query_result": [],
     }
 
-    result = db_functions.execute_query(query)
+    result = execute_query(query)
     assert result == expected_result
 
 
@@ -397,5 +396,5 @@ def test_query_with_semicolon():
         "query_result": [],
     }
 
-    result = db_functions.execute_query(query)
+    result = execute_query(query)
     assert result == expected_result
