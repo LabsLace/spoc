@@ -49,13 +49,14 @@ pip install -r app/backend/requirements
 
 Now that you have everything in place, you need to export the env variable and run the app:
 
-### Local database
-
-Please install
 
 ### Environment variables
 
 Create a `.env` inside the `app/backend` directory, , use the `example.env` file to copy all the keys needed, and change the required values for the app to run, if you don't know any value please reach out to Rodrigo. With this you will be able to set up your local DB running.
+
+### Local database
+
+Please install [PostgreSQL v14](https://www.postgresql.org/download/) and create database. The credentials needed will be in the `.env` that any dev can share.
 
 ### Starting the local environment
 
@@ -83,21 +84,6 @@ Now each time you commit a file, pre-commit will run and check your files, make 
 
 Recommendation: Use pylint to lint your code, that will help to mantain the project.
 
-### Code good practices
-
-The idea of having best practices when coding is something that you need to define with your team and stick to those practices, but we can generalize some thigs for the backend.
-
-Plase stick to follow [pep8](https://www.python.org/dev/peps/pep-0008/) when coding in python, this will help us to follow good standards when writing code.
-
-## How to test
-
-Let's follow the [test driven development (TDD)](https://en.wikipedia.org/wiki/Test-driven_development). Please make sure your tests are mocked up correctly and all the dependencies are managed automatically.
-
-To run the tests you just need to run:
-
-```shell
-python app/backend/run_tests.py
-```
 
 ## Dev Deployment:
 

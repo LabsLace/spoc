@@ -7,8 +7,8 @@ from unittest.mock import patch
 import psycopg2.errorcodes
 import psycopg2.errors
 
-# Need to fix the imports to make the tests work.
-import app.backend.shared_functions.db_connection as db_functions
+# TODO Need to fix the imports to make the tests work.
+from shared_functions.db_connection import execute_query
 
 
 @patch("app.backend.shared_functions.db_connection.psycopg2.connect")
