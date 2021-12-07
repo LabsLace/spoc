@@ -5,14 +5,15 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from flask import Flask
+from fastapi import FastAPI
+
 from shared_functions.spoc_logger import logger
 
 load_dotenv(dotenv_path=Path(__file__).parent.joinpath(".env"))
 
-app = Flask(__name__)
-app.secret_key = os.environ["SECRET_KEY"]
+app = FastAPI()
 
-if __name__ == "__main__":
-    logger.info("Running app.")
-    app.run()
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}

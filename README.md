@@ -60,7 +60,12 @@ Please install [PostgreSQL v14](https://www.postgresql.org/download/) and create
 
 ### Starting the local environment
 
-You just need to run `python app/backend/app.py` this will load the complete environment and start the local server.
+You will need to install the local web server:
+```
+pip install "uvicorn[standard]"
+```
+
+After that, just run `uvicorn --app-dir app/backend main:app --reload` this will load the complete environment and start the local server.
 
 ### Black
 
