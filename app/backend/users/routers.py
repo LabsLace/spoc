@@ -1,6 +1,7 @@
 from fastapi import APIRouter
-from pydantic import BaseModel, EmailStr
 
+from shared_functions.spoc_logger import logger
+from users.api_models import CreateUserInput, CreateUserOutput
 from users.create_users import create
 from users.update_users import update
 
@@ -8,18 +9,10 @@ from users.update_users import update
 router = APIRouter()
 
 
-class CreateUserInput(BaseModel):
-    username: str
-    password: str
-    first_name: str
-    last_name: str
-    email: EmailStr
-    password: str
-
-
-@router.post("/users/", tags=["users"])
+@router.post("/users/", response_model=CreateUserOutput, tags=["users"])
 def create_users(user: CreateUserInput):
-    create(user)
+    logger.info("First event received to create user.")
+    return create(user)
 
 
 @router.get("/users/{user_uuid}", tags=["users"])
