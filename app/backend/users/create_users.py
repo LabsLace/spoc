@@ -42,6 +42,7 @@ def create_user_in_db(body):
     """
     Execute query to insert the values in the DB.
     """
+    logger.info("Inserting user in the DB.")
     query = {
         "query": """
             INSERT INTO users.user_information (
