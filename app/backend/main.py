@@ -1,19 +1,10 @@
 """
 App initilizer.
 """
-import os
-from pathlib import Path
-
-from dotenv import load_dotenv
 from fastapi import FastAPI
 
-from shared_functions.spoc_logger import logger
-
-load_dotenv(dotenv_path=Path(__file__).parent.joinpath(".env"))
+from users.routers import router as users_router
 
 app = FastAPI()
 
-
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+app.include_router(users_router)

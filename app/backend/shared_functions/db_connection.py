@@ -152,7 +152,7 @@ def get_connection() -> psycopg2.extensions.connection:
 
 def execute(
     queries_executables: list[tuple], connection: psycopg2.extensions.connection
-) -> list[dict]:
+) -> dict:
     """
     Make the call to the DB and returns the last response with the
     result.
@@ -171,6 +171,12 @@ def execute(
 
         except psycopg2.errors.lookup(
             psycopg2.errorcodes.UNDEFINED_COLUMN
+        ) as exception:
+            error, error_message = True, str(exception)
+            connection.rollback()
+
+        except psycopg2.errors.lookup(
+            psycopg2.errorcodes.UNIQUE_VIOLATION
         ) as exception:
             error, error_message = True, str(exception)
             connection.rollback()
