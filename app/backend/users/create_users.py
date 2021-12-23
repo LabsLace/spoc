@@ -12,8 +12,8 @@ def create(user):
     user_body = user.dict()
     user_body = format_user_password(user_body)
     user_body = format_parameters_for_db(user_body)
-    create_user_in_db(user_body)
-    return user
+    response = create_user_in_db(user_body)
+    return response
 
 
 def format_user_password(body):
@@ -63,6 +63,12 @@ def create_user_in_db(body):
                 %(salt)s,
                 %(password_hash)s
             )
+            RETURNING
+                user_uuid,
+                username,
+                first_name,
+                last_name,
+                is_active
         """,
         "params": body,
     }
@@ -70,3 +76,8 @@ def create_user_in_db(body):
     response = execute_query(query)
     if response["error"]:
         logger.error("Error while executing query: %s" % response)
+
+    else:
+        response = response["query_result"]
+
+    return response

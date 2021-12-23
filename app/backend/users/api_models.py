@@ -1,3 +1,5 @@
+from typing import Optional, Union
+
 from pydantic import BaseModel, EmailStr
 
 
@@ -9,7 +11,9 @@ class CreateUserInput(BaseModel):
     email: EmailStr
 
 
-class CreateUserOutput(BaseModel):
-    username: str
-    first_name: str
-    email: EmailStr
+class UpdateUserInput(BaseModel):
+    username: Optional[str] = ""
+    password: Optional[str] = ""
+    first_name: Optional[str] = ""
+    last_name: Optional[str] = ""
+    email: Union[Optional[str], Optional[EmailStr]] = ""
