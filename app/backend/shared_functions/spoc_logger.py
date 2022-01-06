@@ -5,13 +5,18 @@ import logging
 import re
 
 
+
+
+
 def get_logger():
     """
     Creates a logger with a handler that formats the messages,
     with this we are able to handle the logs as JSON trying to make easier the debugging.
     """
-    flask_logger = logging.getLogger("uvicorn.error")
-    flask_logger.setLevel(logging.ERROR)
+    uvicorn_logger = logging.getLogger("uvicorn.error")
+    uvicorn_logger.setLevel(logging.ERROR)
+    uvicorn_logger.propagate = False 
+
     logger_ = logging.getLogger()
     logger_.setLevel(logging.INFO)
     logger_.handlers = []
@@ -26,6 +31,7 @@ def get_logger():
     stream_handler.setFormatter(formatter)
 
     logger_.addHandler(stream_handler)
+    uvicorn_logger.addHandler(stream_handler)
 
     return logger_
 
