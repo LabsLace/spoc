@@ -21,11 +21,11 @@ def format_user_password(body):
     Creates salt for the password of the user and encrypts the password
     that will be stored in the DB.
     """
-    body["salt"] = str(uuid.uuid4()).encode("utf-8")
+    body["salt"] = str(uuid.uuid4())
     user_password = hashlib.pbkdf2_hmac(
-        "sha256", body["password"].encode("utf-8"), body["salt"], 10000
+        "sha256", body["password"].encode("utf-8"), body["salt"].encode("utf-8"), 10000
     )
-    body["password_hash"] = user_password
+    body["password_hash"] = user_password.hex()
     return body
 
 
