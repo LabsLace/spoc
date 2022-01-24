@@ -21,11 +21,3 @@ def login_(data: OAuth2PasswordRequestForm = Depends()):
     Handler to manage the login of the users.
     """
     return login(data)
-
-
-@router.post("/logout/{user_uuid}", dependencies=[Depends(manager)])
-def logout():
-    """
-    Handler to manage the logout of the users.
-    """
-    ...
