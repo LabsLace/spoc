@@ -10,7 +10,6 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordRequestForm
 
 from authentication.login import login
-from shared_functions.dependencies import manager
 
 router = APIRouter(tags=["authentication"])
 

@@ -7,7 +7,7 @@ from unittest.mock import patch
 import psycopg2.errorcodes
 import psycopg2.errors
 
-from shared_functions.db_connection import execute_query
+from app.shared_functions import execute_query
 
 
 @patch("shared_functions.db_connection.psycopg2.connect")
